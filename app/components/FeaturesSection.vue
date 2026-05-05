@@ -62,10 +62,10 @@ const tabContent: Record<
 
 <template>
   <section class="bg-lavender">
-    <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
+    <div class="max-w-[1400px] mx-auto pt-28 px-4 sm:px-8 lg:px-20">
       <!-- Heading -->
       <h2
-        class="font-heading text-3xl sm:text-4xl md:text-4xl font-bold leading-tight text-black mt-20 mb-8 max-w-[700px] scroll-animate"
+        class="font-heading text-3xl sm:text-4xl md:text-4xl font-bold leading-tight text-black mb-8 max-w-[700px] scroll-animate"
       >
         Everything you need to avoid bad buying decisions.
       </h2>

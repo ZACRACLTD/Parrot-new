@@ -15,7 +15,7 @@
         <MarqueeSection />
         <FeaturesSection />
         <div
-          class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20 py-16 md:py-20 lg:py-28"
+          class="max-w-[1400px] relative mx-auto px-4 sm:px-8 lg:px-20 py-16 md:py-20 lg:py-28"
         >
           <div
             class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 md:gap-6 mb-8 md:mb-10"

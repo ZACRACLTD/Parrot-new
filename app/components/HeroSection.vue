@@ -7,7 +7,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="bg-cream pt-16 pb-0 overflow-hidden">
+  <section class="bg-cream pt-28 pb-0 overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
       <div
         class="flex flex-col-reverse lg:flex-row items-center justify-between gap-8 md:gap-12"
