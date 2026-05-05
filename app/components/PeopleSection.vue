@@ -167,7 +167,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-   <section class="people-section relative h-[880vh] text-black">
+   <section class="people-section relative md:h-[880vh] h-[710vh] text-black">
     <div
       class="people-sticky sticky top-0 h-screen flex items-center justify-center overflow-hidden"
     >
@@ -181,12 +181,12 @@ onUnmounted(() => {
           class="people-card absolute inset-x-0 top-0 rounded-3xl border-2 border-black bg-white shadow-brutal p-6 md:p-12"
           :style="{ height: '85vh' }"
         >
-            <div class="flex flex-col md:flex-row gap-6 md:gap-12 h-full">
+            <div class="flex flex-col justify-between md:flex-row gap-6 md:gap-12 h-full">
               <div class="w-full md:w-1/2">
                 <img
                   :src="peopleContent[tab].image"
                   :alt="peopleContent[tab].type"
-                  class="rounded-xl h-48 md:h-[400px] w-full object-cover shadow-brutal"
+                  class="rounded-xl h-72 md:h-[400px] w-full object-cover shadow-brutal"
                 />
               </div>
 

@@ -167,12 +167,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-   <section class="stack-section relative md:h-[620vh] h-[630vh] text-black">
+   <section class="stack-section relative md:h-[620vh] h-[500vh] text-black">
     <div
-      class="stack-sticky h-screen flex flex-col gap-8 items-start justify-center overflow-hidden"
+      class="stack-sticky h-screen flex flex-col gap-8 items-start justify-between overflow-hidden"
     >
       <!-- Tabs -->
-      <div class="flex gap-2 flex-wrap">
+      <div class="flex gap-2 flex-wrap mt-6">
         <button
           v-for="t in tabs"
           :key="t"
@@ -194,8 +194,8 @@ onUnmounted(() => {
         <div
           v-for="(tab, index) in tabs"
           :key="tab"
-          class="stack-card absolute inset-x-0 top-0"
-          :style="{ height: '85vh' }"
+          class="stack-card absolute inset-x-0 md:top-0 top-10 md:h-[80vh] h-[65vh]"
+          
         >
           <div
             class="h-full w-full rounded-3xl border-2 border-black bg-white p-8 md:p-16 shadow-[0_8px_40px_rgba(0,0,0,0.08)]"
