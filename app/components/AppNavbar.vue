@@ -12,8 +12,8 @@ const navLinks = computed(() => [
 </script>
 
 <template>
-  <nav :class="['fixed top-0 left-0 right-0 z-50 md:mx-20 md:my-6 bg-lavender border border-black md:rounded-[12px] md:shadow-brutal transition-all duration-500 ease-in-out', navbarVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none']">
-    <div class="max-w-[1400px] mx-auto px-8 py-4 flex items-center justify-between">
+  <nav :class="['fixed top-0 left-0 right-0 z-50 md:mx-20 my-6 mx-6 bg-lavender border border-black rounded-[12px] md:shadow-brutal shadow-brutal-sm transition-all duration-500 ease-in-out', navbarVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none']">
+    <div class="max-w-[1400px] mx-auto px-8 md:py-4 py-2 flex items-center justify-between">
       <!-- Logo -->
        <nuxt-link to="/"> <img src="/images/parrot-logo.svg" alt="Parrot" class=" w-auto" /></nuxt-link>
      
