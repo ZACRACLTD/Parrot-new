@@ -62,85 +62,89 @@ const activeTab = ref(tabs[0]);
 const cards = ref<HTMLElement[]>([]);
 let tl: gsap.core.Timeline;
 
-const PEEK_Y = 12;
+const PEEK_X = 12;
 const PEEK_SCALE = 0.04;
+
+const mm = gsap.matchMedia();
 
 onMounted(async () => {
   await nextTick();
 
-  cards.value = gsap.utils.toArray(".people-card");
-  const total = cards.value.length;
+  mm.add("(min-width: 768px)", () => {
+    cards.value = gsap.utils.toArray(".people-card");
+    const total = cards.value.length;
 
-  // Initial stacked state: card 0 on top, rest peeking below
-  cards.value.forEach((card, index) => {
-    gsap.set(card, {
-      zIndex: total - index,
-      yPercent: 0,
-      y: index * PEEK_Y,
-      scale: 1 - index * PEEK_SCALE,
-      transformOrigin: "top center",
-      opacity: index < 3 ? 1 : 0,
+    // Initial stacked state: card 0 on top, rest peeking to the right
+    cards.value.forEach((card, index) => {
+      gsap.set(card, {
+        zIndex: total - index,
+        xPercent: 0,
+        x: index * PEEK_X,
+        scale: 1 - index * PEEK_SCALE,
+        transformOrigin: "center left",
+        opacity: index < 3 ? 1 : 0,
+      });
     });
-  });
 
-  tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: ".people-section",
-      start: "top top",
-      end: `+=${tabs.length * 1200}`,
-      scrub: 1.2,
-      pin: ".people-sticky",
+    tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".people-section",
+        start: "top top",
+        end: `+=${tabs.length * 1200}`,
+        scrub: 1.2,
+        pin: ".people-sticky",
 
-      onUpdate: (self) => {
-        const index = Math.min(
-          total - 1,
-          Math.round(self.progress * (total - 1))
-        );
-        activeTab.value = tabs[index];
+        onUpdate: (self) => {
+          const index = Math.min(
+            total - 1,
+            Math.round(self.progress * (total - 1))
+          );
+          activeTab.value = tabs[index];
+        },
+
+        onEnter: hideNavbar,
+        onEnterBack: hideNavbar,
+        onLeave: showNavbar,
+        onLeaveBack: showNavbar,
       },
+    });
 
-      onEnter: hideNavbar,
-      onEnterBack: hideNavbar,
-      onLeave: showNavbar,
-      onLeaveBack: showNavbar,
-    },
-  });
+    cards.value.forEach((card, index) => {
+      if (index === total - 1) return;
 
-  cards.value.forEach((card, index) => {
-    if (index === total - 1) return;
+      const step = gsap.timeline();
 
-    const step = gsap.timeline();
-
-    // Top card sweeps up and off
-    step.to(
-      card,
-      {
-        yPercent: -115,
-        scale: 0.92,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.inOut",
-      },
-      0
-    );
-
-    // All cards below advance forward into new positions
-    for (let j = index + 1; j < total; j++) {
-      const newOffset = j - (index + 1);
+      // Top card sweeps left and off
       step.to(
-        cards.value[j],
+        card,
         {
-          y: newOffset * PEEK_Y,
-          scale: 1 - newOffset * PEEK_SCALE,
-          opacity: newOffset < 3 ? 1 : 0,
+          xPercent: -115,
+          scale: 0.92,
+          opacity: 0,
           duration: 1,
           ease: "power3.inOut",
         },
         0
       );
-    }
 
-    tl.add(step, index);
+      // All cards behind advance forward into new positions
+      for (let j = index + 1; j < total; j++) {
+        const newOffset = j - (index + 1);
+        step.to(
+          cards.value[j],
+          {
+            x: newOffset * PEEK_X,
+            scale: 1 - newOffset * PEEK_SCALE,
+            opacity: newOffset < 3 ? 1 : 0,
+            duration: 1,
+            ease: "power3.inOut",
+          },
+          0
+        );
+      }
+
+      tl.add(step, index);
+    });
   });
 });
 
@@ -162,24 +166,24 @@ function goToTab(tab: string) {
 }
 
 onUnmounted(() => {
+  mm.revert();
   ScrollTrigger.getAll().forEach((t) => t.kill());
 });
 </script>
 
 <template>
-   <section class="people-section relative md:h-[880vh] h-[710vh] text-black">
+   <section class="people-section relative md:h-[880vh] text-black h-auto">
     <div
-      class="people-sticky sticky top-0 h-screen flex items-center justify-center overflow-hidden"
+      class="people-sticky md:sticky md:top-0 md:h-screen flex items-center justify-center md:overflow-hidden py-8 md:py-0"
     >
       <div
-        class="relative  w-full max-w-7xl"
-        style="height: calc(85vh + 36px); padding-bottom: 36px;"
+        class="relative w-full max-w-7xl flex flex-col gap-6 md:block md:h-[calc(85vh+36px)] md:pb-9"
       >
         <div
           v-for="(tab, index) in tabs"
           :key="tab"
-          class="people-card absolute inset-x-0 top-0 rounded-3xl border-2 border-black bg-white shadow-brutal p-6 md:p-12"
-          :style="{ height: '85vh' }"
+          class="people-card md:absolute inset-x-0 md:top-0 rounded-3xl border-2 border-black bg-white shadow-brutal p-6 md:p-12"
+
         >
             <div class="flex flex-col justify-between md:flex-row gap-6 md:gap-12 h-full">
               <div class="w-full md:w-1/2">

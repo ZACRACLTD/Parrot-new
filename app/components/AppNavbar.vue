@@ -65,7 +65,7 @@ const navLinks = computed(() => [
   <button
     v-if="!navbarVisible"
     @click="toggleNavbar()"
-    class="fixed top-4 right-4 z-50 w-12 h-12 bg-parrot-amber border-2 border-black shadow-brutal-sm rounded-full flex items-center justify-center hover:brightness-95 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+    class="fixed top-4 right-4 z-50 w-12 h-12 bg-parrot-amber border-2 border-black shadow-brutal-sm rounded-[8px] flex items-center justify-center hover:brightness-95 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
     aria-label="Toggle navbar"
   >
     <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -38,27 +38,31 @@
               class="flex gap-3 flex-shrink-0 self-start lg:self-auto lg:mt-4"
             >
               <button
-                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center border-2 border-black rounded-xl bg-white hover:bg-gray-50 transition-colors shadow-brutal-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
+                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center border-2 border-black rounded-xl bg-white hover:bg-gray-50 transition-colors shadow-brutal-sm"
                 aria-label="Previous"
               >
-                <svg
-                  class="w-4 h-4 md:w-5 md:h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
+                <div class="bg-navy p-1 rounded">
+                  <svg
+                    class="w-4 h-4 md:w-5 md:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </div>
               </button>
+
               <button
-                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-navy"
+                class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center border-2 border-black rounded-xl bg-white text-white  transition-colors shadow-brutal-sm "
                 aria-label="Next"
               >
+                <div class="bg-navy p-1 rounded">
                 <svg
                   class="w-4 h-4 md:w-5 md:h-5"
                   fill="none"
@@ -72,12 +76,12 @@
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
+                </div>
               </button>
             </div>
           </div>
-            <PeopleSection />
+          <PeopleSection />
         </div>
-      
       </div>
 
       <!-- Wave: lavender → cream -->

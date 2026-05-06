@@ -6,20 +6,20 @@
       <!-- Hero Section -->
       <section class="relative overflow-hidden bg-[#fff4d2] py-12 lg:py-24">
         <div class="container relative z-10 mx-auto px-8 lg:px-20">
-           <div class="pt-28">
-             <h1
-               class="text-right text-black font-heading text-[40px] lg:text-[56px] xl:text-[64px] font-bold leading-[1.1]"
-             >
-               Our Story
-             </h1>
-           </div>
+          <div class="pt-28">
+            <h1
+              class="text-right text-black font-heading text-[40px] lg:text-[56px] xl:text-[64px] font-bold leading-[1.1]"
+            >
+              Our Story
+            </h1>
+          </div>
         </div>
       </section>
 
       <WaveSeparator from-color="#fff4d2" to-color="#c1c2ff" />
 
-       <!-- Intro Section -->
-       <section class="bg-lavender px-6 py-12 lg:px-20 lg:py-24">
+      <!-- Intro Section -->
+      <section class="bg-lavender px-6 py-12 lg:px-20 lg:py-24">
         <div class="">
           <p class="font-body text-black text-xl leading-relaxed">
             Why We Built Parrot
@@ -125,16 +125,14 @@
 
       <WaveSeparator from-color="#c1c2ff" to-color="#fff4d2" />
 
-       <!-- Founder Story Section -->
-       <section class="bg-[#fff4d2] px-6 py-12 lg:px-20 lg:py-24">
+      <!-- Founder Story Section -->
+      <section class="bg-[#fff4d2] px-6 py-12 lg:px-20 lg:py-24">
         <div class="container mx-auto">
           <div class="rounded-[24px] border border-solid border-black bg-white">
             <div class="p-8 md:p-12 lg:p-16">
               <div class="mb-8">
                 <div class="flex flex-col gap-2 mb-6">
-                  <h3
-                    class="text-3xl  leading-tight text-black"
-                  >
+                  <h3 class="text-3xl leading-tight text-black">
                     Wale Adeyemo
                   </h3>
                   <p class="text-xl font-normal leading-relaxed text-black">
@@ -223,11 +221,11 @@
           </div>
         </div>
       </section>
-<WaveSeparator from-color="#fff4d2" to-color="#c1c2ff" />
-       <!-- Philosophy Section -->
-       <section
-         class="relative overflow-hidden bg-lavender px-6 py-12 lg:px-20 lg:py-24"
-       >
+      <WaveSeparator from-color="#fff4d2" to-color="#c1c2ff" />
+      <!-- Philosophy Section -->
+      <section
+        class="relative overflow-hidden bg-lavender px-6 py-12 lg:px-20 lg:py-24"
+      >
         <div class="container relative z-10 mx-auto">
           <div class="mx-auto max-w-[1308px]">
             <h2
@@ -245,10 +243,15 @@
                     alt="Frame"
                     src="/frame-1000007535-1.svg"
                   /> -->
-                  <img src="/images/checkmark.svg" alt="" class="w-9 h-9 flex-shrink-0 mt-0.5" />
-                  <p
-                    class="text-lg text-black font-normal leading-relaxed "
+                  <div
+                    class="bg-white border p-2 shadow-brutal-sm rounded-[8px] border border-black flex items-center justify-center"
                   >
+                    <img
+                      src="/images/checkmark.svg"
+                      class="w-4 h-4 md:w-7 md:h-7"
+                    />
+                  </div>
+                  <p class="text-lg flex-1 text-black font-normal leading-relaxed">
                     We believe that commerce is fundamentally a social act, so
                     trust in commerce can only be built socially, person to
                     person, and within communities.
@@ -259,10 +262,15 @@
                 class="rounded-xl border-2 border-black bg-white shadow-[4px_4px_0px_#000000]"
               >
                 <div class="flex items-center gap-6 p-5 sm:p-6 lg:px-8 lg:py-8">
-                  <img src="/images/checkmark.svg" alt="" class="w-9 h-9 flex-shrink-0 mt-0.5" />
-                  <p
-                    class="text-lg text-black font-normal leading-relaxed "
+                  <div
+                    class="bg-white border p-2 shadow-brutal-sm rounded-[8px] border border-black flex items-center justify-center"
                   >
+                    <img
+                      src="/images/checkmark.svg"
+                      class="w-4 h-4 md:w-7 md:h-7"
+                    />
+                  </div>
+                  <p class="text-lg flex-1 text-black font-normal leading-relaxed">
                     We believe that every customer deserves to know the truth
                     about what they are paying for before they pay.
                   </p>
@@ -272,10 +280,15 @@
                 class="rounded-xl border-2 border-black bg-white shadow-[4px_4px_0px_#000000]"
               >
                 <div class="flex items-center gap-6 p-5 sm:p-6 lg:px-8 lg:py-8">
-                   <img src="/images/checkmark.svg" alt="" class="w-9 h-9 flex-shrink-0 mt-0.5" />
-                  <p
-                    class="text-lg text-black font-normal leading-relaxed "
+                  <div
+                    class="bg-white border p-2 shadow-brutal-sm rounded-[8px] border border-black flex items-center justify-center"
                   >
+                    <img
+                      src="/images/checkmark.svg"
+                      class="w-4 h-4 md:w-7 md:h-7"
+                    />
+                  </div>
+                  <p class="text-lg flex-1 text-black font-normal leading-relaxed">
                     We believe that every legitimate business deserves a
                     platform where their reputation actually follows them.
                   </p>

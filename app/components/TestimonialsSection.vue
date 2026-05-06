@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, Transition } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 
 const currentPage = ref<number>(1);
-const itemsPerPage = 3;
+const isDesktop = ref(false);
+const itemsPerPage = computed(() => (isDesktop.value ? 3 : 1));
+
+let mql: MediaQueryList | null = null;
+const updateIsDesktop = (e: MediaQueryListEvent | MediaQueryList) => {
+  isDesktop.value = e.matches;
+  currentPage.value = 1;
+};
 
 const observeElements = (selector: string, className: string) => {
   if (typeof window === "undefined") return;
@@ -24,6 +31,16 @@ const observeElements = (selector: string, className: string) => {
 
 onMounted(() => {
   observeElements(".scroll-animate", "animate-fade-in-up");
+
+  if (typeof window !== "undefined") {
+    mql = window.matchMedia("(min-width: 768px)");
+    isDesktop.value = mql.matches;
+    mql.addEventListener("change", updateIsDesktop);
+  }
+});
+
+onUnmounted(() => {
+  mql?.removeEventListener("change", updateIsDesktop);
 });
 
 const testimonials = [
@@ -60,12 +77,12 @@ const testimonials = [
 ];
 
 const totalPages = computed(() =>
-  Math.ceil(testimonials.length / itemsPerPage),
+  Math.ceil(testimonials.length / itemsPerPage.value),
 );
 
 const visibleTestimonials = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
   return testimonials.slice(start, end);
 });
 
@@ -78,116 +95,124 @@ const next = () => {
 </script>
 
 <template>
-   <section class="bg-cream py-12 md:py-16 lg:py-28">
-     <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
-       <!-- Heading -->
-       <div class="text-center mb-10 md:mb-12 lg:mb-16">
-         <h2
-           class="font-heading text-3xl sm:text-4xl md:text-5xl  font-semibold leading-tight text-black mb-4 scroll-animate"
-         >
-           The community is already talking.
-         </h2>
-         <p class="font-body text-black text-base md:text-lg">
-           Here is what our members are saying.
-         </p>
-       </div>
+  <section class="bg-cream py-12 md:py-16 lg:py-28">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
+      <!-- Heading -->
+      <div class="text-center mb-10 md:mb-12 lg:mb-16">
+        <h2
+          class="font-heading text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight text-black mb-4 scroll-animate"
+        >
+          The community is already talking.
+        </h2>
+        <p class="font-body text-black text-base md:text-lg">
+          Here is what our members are saying.
+        </p>
+      </div>
 
-       <!-- Testimonial Cards -->
-       <div
-         :key="currentPage"
-         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12"
-       >
-         <div
-           v-for="(t, idx) in visibleTestimonials"
-           :key="t.name + currentPage"
-           :class="[
-             'bg-white border-2 border-black rounded-2xl p-4 sm:p-6 md:p-8 flex flex-col gap-4 md:gap-6',
-             idx === 1 ? 'shadow-brutal' : 'shadow-brutal-sm',
-           ]"
-         >
-           <div class="flex items-center gap-3 md:gap-4">
-             <img
-               :src="t.avatar"
-               :alt="t.name"
-               class="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-black shadow-brutal-sm flex-shrink-0"
-             />
-             <div>
-               <p class="font-heading text-xl md:text-2xl font-semibold text-black">
-                 {{ t.name }}
-               </p>
-               <p class="font-body text-xs md:text-base text-gray-600">
-                 {{ t.location }}
-               </p>
-             </div>
-           </div>
-           <p class="font-body text-base text-black leading-relaxed flex-1">
-             {{ t.text }}
-           </p>
-         </div>
-       </div>
+      <!-- Testimonial Cards -->
+      <div
+        :key="currentPage"
+        class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 items-center"
+      >
+        <div
+          v-for="(t, idx) in visibleTestimonials"
+          :key="t.name + currentPage"
+          :class="[
+            'bg-white border-2 border-black rounded-2xl p-4 sm:p-6 md:p-8 flex flex-col gap-4 md:gap-6 transition-transform duration-300',
+            idx === 1
+              ? 'shadow-brutal md:scale-110 md:z-10 relative'
+              : 'shadow-brutal-sm md:scale-95 md:opacity-90',
+          ]"
+        >
+          <div class="flex items-center gap-3 md:gap-4">
+            <img
+              :src="t.avatar"
+              :alt="t.name"
+              class="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-black shadow-brutal-sm flex-shrink-0"
+            />
+            <div>
+              <p
+                class="font-heading text-xl md:text-2xl font-semibold text-black"
+              >
+                {{ t.name }}
+              </p>
+              <p class="font-body text-xs md:text-base text-gray-600">
+                {{ t.location }}
+              </p>
+            </div>
+          </div>
+          <p class="font-body text-base text-black leading-relaxed flex-1">
+            {{ t.text }}
+          </p>
+        </div>
+      </div>
 
-       <!-- Carousel Navigation -->
-       <div class="flex items-center justify-center gap-4 md:gap-6">
-         <button
-           class="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-40"
-           aria-label="Previous testimonials"
-           :disabled="currentPage === 1"
-           @click="prev"
-         >
-           <svg
-             class="w-4 h-4 md:w-5 md:h-5"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2"
-             viewBox="0 0 24 24"
-           >
-             <path
-               stroke-linecap="round"
-               stroke-linejoin="round"
-               d="M15 19l-7-7 7-7"
-             />
-           </svg>
-         </button>
+      <!-- Carousel Navigation -->
+      <div class="flex items-center justify-center gap-4 md:gap-6">
+        <button
+          class="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center border-2 !p-3 border-black rounded-xl bg-white text-white hover:bg-navy transition-colors shadow-brutal-sm disabled:opacity-40"
+          aria-label="Previous testimonials"
+          :disabled="currentPage === 1"
+          @click="prev"
+        >
+          <div class="bg-navy p-1 rounded">
+            <svg
+              class="w-4 h-4 md:w-5 md:h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </div>
+        </button>
 
-         <!-- Dots -->
-         <div class="flex gap-1.5 md:gap-2">
-           <button
-             v-for="i in totalPages"
-             :key="i"
-             :class="[
-               'rounded-sm transition-all',
-               currentPage === i
-                 ? 'w-5 h-3 md:w-6 md:h-3 bg-navy'
-                 : 'w-2.5 h-2.5 md:w-3 md:h-3 bg-gray-300 hover:bg-gray-400',
-             ]"
-             :aria-label="`Go to page ${i}`"
-             @click="currentPage = i"
-           />
-         </div>
+        <!-- Dots -->
+        <div class="flex gap-1.5 md:gap-2">
+          <button
+            v-for="i in totalPages"
+            :key="i"
+            :class="[
+              'rounded-sm transition-all',
+              currentPage === i
+                ? 'w-5 h-3 md:w-6 md:h-3 bg-navy'
+                : 'w-2.5 h-2.5 md:w-3 md:h-3 bg-gray-300 hover:bg-gray-400',
+            ]"
+            :aria-label="`Go to page ${i}`"
+            @click="currentPage = i"
+          />
+        </div>
 
-         <button
-           class="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-40"
-           aria-label="Next testimonials"
-           :disabled="currentPage === totalPages"
-           @click="next"
-         >
-           <svg
-             class="w-4 h-4 md:w-5 md:h-5"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2"
-             viewBox="0 0 24 24"
-           >
-             <path
-               stroke-linecap="round"
-               stroke-linejoin="round"
-               d="M9 5l7 7-7 7"
-             />
-           </svg>
-         </button>
-       </div>
-     </div>
-   </section>
+        <button
+          class="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center border-2 !p-3 border-black rounded-xl bg-white text-white hover:bg-navy transition-colors shadow-brutal-sm disabled:opacity-40"
+          aria-label="Next testimonials"
+          :disabled="currentPage === totalPages"
+          @click="next"
+        >
+          <div class="bg-navy p-1 rounded">
+            <svg
+              class="w-4 h-4 md:w-5 md:h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
 </template>
 
 <style scoped>

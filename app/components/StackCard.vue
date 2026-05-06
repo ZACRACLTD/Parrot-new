@@ -67,80 +67,84 @@ let tl: gsap.core.Timeline;
 const PEEK_Y = 6; // Reduced for mobile
 const PEEK_SCALE = 0.02; // Reduced for mobile
 
+const mm = gsap.matchMedia();
+
 onMounted(() => {
-  cards.value = gsap.utils.toArray(".stack-card");
-  const total = cards.value.length;
+  mm.add("(min-width: 768px)", () => {
+    cards.value = gsap.utils.toArray(".stack-card");
+    const total = cards.value.length;
 
-  // Set initial stacked state: card 0 on top, rest peeking below
-  cards.value.forEach((card, index) => {
-    gsap.set(card, {
-      zIndex: total - index,
-      yPercent: 0,
-      y: index * PEEK_Y,
-      scale: 1 - index * PEEK_SCALE,
-      transformOrigin: "top center",
-      opacity: index < 3 ? 1 : 0, // only show top 3 in stack
+    // Set initial stacked state: card 0 on top, rest peeking below
+    cards.value.forEach((card, index) => {
+      gsap.set(card, {
+        zIndex: total - index,
+        yPercent: 0,
+        y: index * PEEK_Y,
+        scale: 1 - index * PEEK_SCALE,
+        transformOrigin: "top center",
+        opacity: index < 3 ? 1 : 0, // only show top 3 in stack
+      });
     });
-  });
 
-  tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: ".stack-section",
-      start: "top top",
-      end: `+=${tabs.length * 800}`,
-      scrub: 1.2,
-      pin: ".stack-sticky",
+    tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".stack-section",
+        start: "top top",
+        end: `+=${tabs.length * 800}`,
+        scrub: 1.2,
+        pin: ".stack-sticky",
 
-      onUpdate: (self) => {
-        const index = Math.min(
-          total - 1,
-          Math.round(self.progress * (total - 1)),
-        );
-        activeTab.value = tabs[index];
+        onUpdate: (self) => {
+          const index = Math.min(
+            total - 1,
+            Math.round(self.progress * (total - 1)),
+          );
+          activeTab.value = tabs[index];
+        },
+
+        onEnter: hideNavbar,
+        onEnterBack: hideNavbar,
+        onLeave: showNavbar,
+        onLeaveBack: showNavbar,
       },
+    });
 
-      onEnter: hideNavbar,
-      onEnterBack: hideNavbar,
-      onLeave: showNavbar,
-      onLeaveBack: showNavbar,
-    },
-  });
+    cards.value.forEach((card, index) => {
+      if (index === total - 1) return;
 
-  cards.value.forEach((card, index) => {
-    if (index === total - 1) return;
+      const step = gsap.timeline();
 
-    const step = gsap.timeline();
-
-    // 1. Top card exits: slides up and off screen
-    step.to(
-      card,
-      {
-        yPercent: -115,
-        scale: 0.92,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.inOut",
-      },
-      0,
-    );
-
-    // 2. All remaining cards below animate forward into their new positions
-    for (let j = index + 1; j < total; j++) {
-      const newOffset = j - (index + 1); // how far below the new top card they'll be
+      // 1. Top card exits: slides up and off screen
       step.to(
-        cards.value[j],
+        card,
         {
-          y: newOffset * PEEK_Y,
-          scale: 1 - newOffset * PEEK_SCALE,
-          opacity: newOffset < 3 ? 1 : 0,
+          yPercent: -115,
+          scale: 0.92,
+          opacity: 0,
           duration: 1,
           ease: "power3.inOut",
         },
-        0, // all happen simultaneously
+        0,
       );
-    }
 
-    tl.add(step, index);
+      // 2. All remaining cards below animate forward into their new positions
+      for (let j = index + 1; j < total; j++) {
+        const newOffset = j - (index + 1); // how far below the new top card they'll be
+        step.to(
+          cards.value[j],
+          {
+            y: newOffset * PEEK_Y,
+            scale: 1 - newOffset * PEEK_SCALE,
+            opacity: newOffset < 3 ? 1 : 0,
+            duration: 1,
+            ease: "power3.inOut",
+          },
+          0, // all happen simultaneously
+        );
+      }
+
+      tl.add(step, index);
+    });
   });
 });
 
@@ -162,17 +166,18 @@ function goToTab(tab: string) {
 }
 
 onUnmounted(() => {
+  mm.revert();
   ScrollTrigger.getAll().forEach((t) => t.kill());
 });
 </script>
 
 <template>
-   <section class="stack-section relative md:h-[620vh] h-[500vh] text-black">
+   <section class="stack-section relative  text-black">
     <div
-      class="stack-sticky h-screen flex flex-col gap-8 items-start justify-between overflow-hidden"
+      class="stack-sticky md:h-screen flex flex-col gap-8 items-start md:justify-between md:overflow-hidden py-8 md:py-0"
     >
       <!-- Tabs -->
-      <div class="flex gap-2 flex-wrap mt-6">
+      <div class="hidden md:flex gap-2 flex-wrap mt-6">
         <button
           v-for="t in tabs"
           :key="t"
@@ -188,37 +193,34 @@ onUnmounted(() => {
 
       <!-- Stack container — extra bottom padding so peeking cards are visible -->
        <div
-         class="relative w-full"
-         style="height: calc(85vh + 36px); padding-bottom: 36px"
+         class="relative w-full flex flex-col gap-6 md:block md:h-[calc(85vh+36px)] md:pb-9"
        >
         <div
           v-for="(tab, index) in tabs"
           :key="tab"
-          class="stack-card absolute inset-x-0 md:top-0 top-10 md:h-[80vh] h-[65vh]"
-          
+          class="stack-card md:absolute inset-x-0 md:top-0 md:h-[80vh]"
+
         >
           <div
-            class="h-full w-full rounded-3xl border-2 border-black bg-white p-8 md:p-16 shadow-[0_8px_40px_rgba(0,0,0,0.08)]"
+            class="h-full w-full rounded-3xl border-2 border-black bg-white px-8 pt-8 pb-16 md:p-16 shadow-[0_8px_40px_rgba(0,0,0,0.08)]"
           >
             <div class="flex flex-col md:flex-row gap-8 md:gap-16 h-full items-center">
-              <div class="w-full md:w-4/12">
+              <div class="w-full md:w-6/12">
                 <img
                   :src="tabContent[tab].image"
-                  class="rounded-xl md:block hidden h-48 md:h-full w-full object-contain"
+                  class="rounded-xl h-56 md:h-full w-full object-cover"
                 />
               </div>
-              <div class="w-full md:w-5/12 flex flex-col gap-4 md:gap-6">
+              <div class="w-full md:w-5/12 flex flex-col gap-8 ">
                 <h2 class="text-2xl md:text-4xl">
                   {{ tabContent[tab].title }}
                 </h2>
-                <p class="text-gray-600 text-sm md:text-base">
-                  {{ tabContent[tab].description }}
-                </p>
+               
                 <div class="flex flex-col gap-3 md:gap-4">
                   <div
                     v-for="bullet in tabContent[tab].bullets"
                     :key="bullet"
-                    class="flex gap-3 items-center"
+                    class="flex gap-4 items-center"
                   >
                     <div class="bg-white border p-2 shadow-brutal-sm rounded-[8px]  ">
                       <img src="/images/checkmark.svg" class="w-4 h-4 md:w-6 md:h-6" />
